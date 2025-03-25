@@ -42,6 +42,8 @@ const EstilosGlobais = createGlobalStyle`
     height: 100%;
     scroll-behavior: smooth;
     font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
   body {
@@ -52,7 +54,7 @@ const EstilosGlobais = createGlobalStyle`
     min-height: 100vh;
     line-height: 1.6;
     overflow-x: hidden;
-  
+    text-rendering: optimizeSpeed;
   }
 
   @media (max-width: 768px) {
@@ -64,6 +66,18 @@ const EstilosGlobais = createGlobalStyle`
   @media (max-width: 480px) {
     html {
       font-size: 12px;
+    }
+  }
+
+  @media screen and (orientation: portrait) {
+    html {
+      /* Ajustes específicos para modo retrato */
+    }
+  }
+
+  @media screen and (orientation: landscape) {
+    html {
+      /* Ajustes específicos para modo paisagem */
     }
   }
 
@@ -188,7 +202,6 @@ const EstilosGlobais = createGlobalStyle`
     padding: 0;
   }
 
-  /* Acessibilidade - melhorar o foco visível */
   :focus {
     outline: 2px solid var(--secondary-color);
     outline-offset: 2px;
@@ -203,7 +216,6 @@ const EstilosGlobais = createGlobalStyle`
     outline-offset: 2px;
   }
 
-  /* Scrollbar personalizada */
   ::-webkit-scrollbar {
     width: 10px;
     height: 10px;
@@ -222,28 +234,26 @@ const EstilosGlobais = createGlobalStyle`
     background: var(--secondary-color);
   }
 
-  /* Seleção de texto */
   ::selection {
     background-color: var(--secondary-color);
     color: var(--text-light);
   }
 
-  /* Remove normalize.css duplicado e mantém apenas o essencial */
   hr {
-    box-sizing: content-box; /* 1 */
-    height: 0; /* 1 */
-    overflow: visible; /* 2 */
+    box-sizing: content-box;
+    height: 0;
+    overflow: visible;
   }
 
   pre {
-    font-family: monospace, monospace; /* 1 */
-    font-size: 1em; /* 2 */
+    font-family: monospace, monospace;
+    font-size: 1em;
   }
 
   abbr[title] {
-    border-bottom: none; /* 1 */
-    text-decoration: underline; /* 2 */
-    text-decoration: underline dotted; /* 2 */
+    border-bottom: none;
+    text-decoration: underline;
+    text-decoration: underline dotted;
   }
 
   b,
@@ -254,8 +264,8 @@ const EstilosGlobais = createGlobalStyle`
   code,
   kbd,
   samp {
-    font-family: monospace, monospace; /* 1 */
-    font-size: 1em; /* 2 */
+    font-family: monospace, monospace;
+    font-size: 1em;
   }
 
   small {
@@ -283,12 +293,12 @@ const EstilosGlobais = createGlobalStyle`
   }
 
   legend {
-    box-sizing: border-box; /* 1 */
-    color: inherit; /* 2 */
-    display: table; /* 1 */
-    max-width: 100%; /* 1 */
-    padding: 0; /* 3 */
-    white-space: normal; /* 1 */
+    box-sizing: border-box;
+    color: inherit;
+    display: table;
+    max-width: 100%;
+    padding: 0;
+    white-space: normal;
   }
 
   progress {
@@ -301,8 +311,8 @@ const EstilosGlobais = createGlobalStyle`
 
   [type="checkbox"],
   [type="radio"] {
-    box-sizing: border-box; /* 1 */
-    padding: 0; /* 2 */
+    box-sizing: border-box;
+    padding: 0;
   }
 
   [type="number"]::-webkit-inner-spin-button,
@@ -311,8 +321,8 @@ const EstilosGlobais = createGlobalStyle`
   }
 
   [type="search"] {
-    -webkit-appearance: textfield; /* 1 */
-    outline-offset: -2px; /* 2 */
+    -webkit-appearance: textfield;
+    outline-offset: -2px;
   }
 
   [type="search"]::-webkit-search-decoration {
@@ -320,24 +330,13 @@ const EstilosGlobais = createGlobalStyle`
   }
 
   ::-webkit-file-upload-button {
-    -webkit-appearance: button; /* 1 */
-    font: inherit; /* 2 */
+    -webkit-appearance: button;
+    font: inherit;
   }
-
-  /* Interactive
-     ========================================================================== */
-
-  /*
-   * Add the correct display in Edge, IE 10+, and Firefox.
-   */
 
   details {
     display: block;
   }
-
-  /*
-   * Add the correct display in all browsers.
-   */
 
   summary {
     display: list-item;
@@ -349,6 +348,21 @@ const EstilosGlobais = createGlobalStyle`
 
   [hidden] {
     display: none;
+  }
+
+  .gpu-accelerated {
+    will-change: transform;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
   }
 `;
 
