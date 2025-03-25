@@ -21,7 +21,7 @@ const Button = () => {
           </a>
         </div>
         <div className="child child-2">
-          <a href="#" target="_blank" rel="noopener noreferrer">
+          <a href="https://www.instagram.com/maryoficialvip" target="_blank" rel="noopener noreferrer">
             <button className="button btn-2" aria-label="Instagram">
               <IoLogoInstagram color="#ff00ff" />
             </button>
