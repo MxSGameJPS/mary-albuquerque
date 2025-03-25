@@ -1,9 +1,10 @@
 import { useEffect, useState, useRef } from "react";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Button from "../Components/Botão";
 import ButtonVip from "../Components/BotaoVip";
+import { FaChevronDown } from "react-icons/fa";
 
 export default function DobraUm() {
   const [windowSize, setWindowSize] = useState({
@@ -12,6 +13,7 @@ export default function DobraUm() {
   });
   const [currentBgIndex, setCurrentBgIndex] = useState(0);
   const bgInterval = useRef(null);
+  const [showScrollIcon, setShowScrollIcon] = useState(true);
 
   // Array de imagens para o background em telas pequenas
   const bgImages = [
@@ -74,6 +76,21 @@ export default function DobraUm() {
         },
       });
 
+      // Adicionar ScrollTrigger para controlar a visibilidade do ícone
+      ScrollTrigger.create({
+        trigger: ".mask",
+        start: "top top",
+        end: "+=100",
+        onUpdate: (self) => {
+          // Esconder o ícone quando começar a rolar
+          if (self.progress > 0.05) {
+            setShowScrollIcon(false);
+          } else {
+            setShowScrollIcon(true);
+          }
+        },
+      });
+
       // Configurar a oscilação de background apenas para telas pequenas
       if (window.innerWidth <= 768) {
         // Se já existir um intervalo, limpe-o
@@ -121,8 +138,21 @@ export default function DobraUm() {
   const orientationClass =
     windowSize.width > windowSize.height ? "landscape" : "portrait";
 
+  const handleScrollDown = () => {
+    window.scrollTo({
+      top: window.innerHeight,
+      behavior: "smooth",
+    });
+  };
+
   return (
     <PageWrapper>
+      {showScrollIcon && (
+        <ScrollIndicator onClick={handleScrollDown}>
+          <FaChevronDown size={24} />
+          <ScrollText>Role para baixo</ScrollText>
+        </ScrollIndicator>
+      )}
       <Mask className={`mask ${orientationClass} gpu-accelerated`}>
         <Background
           $isSmallScreen={windowSize.width <= 768}
@@ -148,8 +178,68 @@ export default function DobraUm() {
 const PageWrapper = styled.div`
   position: relative;
   min-height: 200vh;
-  width: 100vw;
+  width: 100%;
   overflow-x: hidden;
+`;
+
+const bounce = keyframes`
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-10px);
+  }
+  60% {
+    transform: translateY(-5px);
+  }
+`;
+
+const fadeInOut = keyframes`
+  0%, 100% {
+    opacity: 0.7;
+  }
+  50% {
+    opacity: 1;
+  }
+`;
+
+const ScrollIndicator = styled.div`
+  position: fixed;
+  bottom: 25%;
+  left: 40%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #a72f66;
+  animation: ${bounce} 2s infinite, ${fadeInOut} 2s infinite;
+  z-index: 15;
+  pointer-events: auto;
+  cursor: pointer;
+
+  svg {
+    filter: drop-shadow(0 0 3px rgba(255, 255, 255, 0.7));
+  }
+
+  @media (max-width: 768px) {
+    bottom: 20%;
+  }
+
+  @media (max-width: 480px) {
+    bottom: 15%;
+  }
+`;
+
+const ScrollText = styled.span`
+  font-size: 14px;
+  margin-top: 5px;
+  font-weight: 600;
+  color: #a72f66;
+  text-shadow: 0 1px 3px rgba(255, 255, 255, 0.7);
+
+  @media (max-width: 480px) {
+    font-size: 12px;
+  }
 `;
 
 const Background = styled.div`
@@ -157,10 +247,12 @@ const Background = styled.div`
   background-size: cover;
   background-position: center;
   height: 100vh;
-  width: 100vw;
+  width: 100%;
   position: fixed;
   top: 0;
   left: 0;
+  right: 0;
+  margin: 0 auto;
   z-index: 0;
   transition: ${(props) =>
     props.$isSmallScreen ? "background-image 1s ease-in-out" : "none"};
@@ -174,10 +266,12 @@ const Mask = styled.div`
     mask-size: 100%;
     transition: mask-size 0.3s ease-out;
     height: 100vh;
-    width: 100vw;
+    width: 100%;
     position: fixed;
     top: 0;
     left: 0;
+    right: 0;
+    margin: 0 auto;
     z-index: 1;
   }
 
